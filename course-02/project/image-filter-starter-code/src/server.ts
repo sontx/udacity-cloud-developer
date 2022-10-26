@@ -22,7 +22,7 @@ import {deleteLocalFiles, filterImageFromURL, isValidUrl, sendFile} from './util
         const filteredImagePath = await filterImageFromURL(image_url);
         await sendFile(filteredImagePath, res);
         await deleteLocalFiles([filteredImagePath]);
-      } catch (e) {
+      } catch (e: any) {
         console.log(e)
         res.status(400).send('Sorry! we cannot process your image: ' + e.message)
       }

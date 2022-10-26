@@ -42,7 +42,7 @@ export async function deleteLocalFiles(files: Array<string>) {
 }
 
 export async function sendFile(filePath: string, res: express.Response) {
-  return new Promise(((resolve, reject) => {
+  return new Promise<void>(((resolve, reject) => {
     res.status(200).sendFile(filePath, err => {
       if (!err) {
         resolve()
