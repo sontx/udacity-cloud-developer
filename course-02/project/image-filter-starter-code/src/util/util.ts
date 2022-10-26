@@ -1,5 +1,7 @@
 import fs from "fs";
-import Jimp = require("jimp");
+import express from "express";
+import Jimp from 'jimp';
+import axios from "axios";
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
@@ -11,7 +13,8 @@ import Jimp = require("jimp");
 export async function filterImageFromURL(inputURL: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
-      const photo = await Jimp.read(inputURL);
+      const {data} = await axios.get(inputURL, {responseType: 'arraybuffer'})
+      const photo = await Jimp.read(data);
       const outpath =
         "/tmp/filtered." + Math.floor(Math.random() * 2000) + ".jpg";
       await photo
@@ -36,4 +39,20 @@ export async function deleteLocalFiles(files: Array<string>) {
   for (let file of files) {
     fs.unlinkSync(file);
   }
+}
+
+export async function sendFile(filePath: string, res: express.Response) {
+  return new Promise(((resolve, reject) => {
+    res.status(200).sendFile(filePath, err => {
+      if (!err) {
+        resolve()
+      } else {
+        reject(err)
+      }
+    })
+  }))
+}
+
+export function isValidUrl(url: string): boolean {
+  return !!url && /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(url);
 }
