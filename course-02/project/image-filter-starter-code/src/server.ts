@@ -14,7 +14,7 @@ import {deleteLocalFiles, filterImageFromURL, isValidUrl, sendFile} from './util
   app.use(bodyParser.json());
 
   app.get('/filteredimage', async (req: express.Request, res: express.Response) => {
-    const {image_url} = req.query;
+    const image_url: string = req.query.image_url;
     if (!isValidUrl(image_url)) {
       res.status(400).send('image_url must be an invalid url');
     } else {
