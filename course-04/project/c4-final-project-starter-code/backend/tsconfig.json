@@ -8,9 +8,12 @@
     "noUnusedParameters": true,
     "sourceMap": true,
     "target": "es2017",
-    "outDir": "lib"
+    "outDir": "lib",
+    "strict": false,
+    "skipLibCheck": true,
+    "types": []
   },
   "exclude": [
-    "node_modules"
+    "node_modules/**/*",
   ]
 }
