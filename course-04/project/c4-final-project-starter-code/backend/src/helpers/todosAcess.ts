@@ -49,15 +49,20 @@ export class TodosAccess {
       .update({
         TableName: this.todosTable,
         Key: {
-          ':todoId': todoId,
-          ':userId': userId
+          todoId: todoId,
+          userId: userId
         },
         UpdateExpression:
-          'set name = :name, #dueDate = :dueDate, #done = :done',
+          'set #workaroundName = :name, #dueDate = :dueDate, #done = :done',
         ExpressionAttributeValues: {
           ':name': todo.name,
           ':dueDate': todo.dueDate,
           ':done': todo.done
+        },
+        ExpressionAttributeNames: {
+          '#workaroundName': 'name',
+          '#dueDate': 'dueDate',
+          '#done': 'done'
         }
       })
       .promise();
@@ -72,8 +77,8 @@ export class TodosAccess {
       .update({
         TableName: this.todosTable,
         Key: {
-          ':todoId': todoId,
-          ':userId': userId
+          todoId: todoId,
+          userId: userId
         },
         UpdateExpression: 'set attachmentUrl = :attachmentUrl',
         ExpressionAttributeValues: {
@@ -107,8 +112,8 @@ export class TodosAccess {
       .delete({
         TableName: this.todosTable,
         Key: {
-          ':todoId': todoId,
-          ':userId': userId
+          todoId: todoId,
+          userId: userId
         }
       })
       .promise();
