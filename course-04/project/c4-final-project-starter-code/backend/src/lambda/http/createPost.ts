@@ -2,25 +2,25 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import 'source-map-support/register';
 import * as middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest';
 import { getUserId } from '../utils';
-import { createTodo } from '../../helpers/todos';
 import { createLogger } from '../../utils/logger';
+import {CreatePostRequest} from "../../requests/CreatePostRequest";
+import {createPost} from "../../helpers/posts";
 
-const logger = createLogger('createTodo');
+const logger = createLogger('createPost');
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const newTodo: CreateTodoRequest = JSON.parse(event.body);
+    const newPost: CreatePostRequest = JSON.parse(event.body);
     const userId = getUserId(event);
-    const todo = await createTodo(userId, newTodo);
+    const post = await createPost(userId, newPost);
 
-    logger.info(`Created todo`, { userId, todo });
+    logger.info(`Created post`, { userId, post: post });
 
     return {
       statusCode: 201,
       body: JSON.stringify({
-        item: todo
+        item: post
       })
     };
   }

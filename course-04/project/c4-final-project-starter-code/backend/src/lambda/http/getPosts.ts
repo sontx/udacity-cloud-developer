@@ -3,27 +3,24 @@ import 'source-map-support/register';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import * as middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
-import * as uuid from 'uuid';
+
 import { getUserId } from '../utils';
 import { createLogger } from '../../utils/logger';
-import {getUploadUrl} from "../../helpers/posts";
+import {getAllPosts} from "../../helpers/posts";
 
-const logger = createLogger('generateUploadUrl');
+const logger = createLogger('getPosts');
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const postId = event.pathParameters.postId;
     const userId = getUserId(event);
+    const posts = await getAllPosts(userId);
 
-    const imageId = uuid.v4();
-    const url = await getUploadUrl(userId, postId, imageId);
-
-    logger.info(`Generated upload url`, { userId, postId: postId, url });
+    logger.info(`Get all posts`, { userId, count: posts.length });
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        uploadUrl: url
+        items: posts
       })
     };
   }

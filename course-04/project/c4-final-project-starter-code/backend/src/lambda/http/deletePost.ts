@@ -4,22 +4,20 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import * as middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
 
-import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest';
 import { getUserId } from '../utils';
-import { updateTodo } from '../../helpers/todos';
 import { createLogger } from '../../utils/logger';
+import {deletePost} from "../../helpers/posts";
 
-const logger = createLogger('updateTodo');
+const logger = createLogger('deletePost');
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId;
-    const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
+    const postId = event.pathParameters.postId;
     const userId = getUserId(event);
 
-    await updateTodo(userId, todoId, updatedTodo);
+    await deletePost(userId, postId);
 
-    logger.info(`Updated todo`, { userId, todoId, updatedTodo });
+    logger.info(`Deleted post`, { userId, postId: postId });
 
     return {
       statusCode: 200,

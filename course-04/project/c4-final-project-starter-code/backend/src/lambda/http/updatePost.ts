@@ -5,23 +5,27 @@ import * as middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
 
 import { getUserId } from '../utils';
-import { getAllTodos } from '../../helpers/todos';
 import { createLogger } from '../../utils/logger';
+import {UpdatePostRequest} from "../../requests/UpdatePostRequest";
+import {updatePost} from "../../helpers/posts";
 
-const logger = createLogger('getTodos');
+const logger = createLogger('updatePost');
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    const postId = event.pathParameters.postId;
+    const updatedPost: UpdatePostRequest = JSON.parse(event.body);
     const userId = getUserId(event);
-    const todos = await getAllTodos(userId);
 
-    logger.info(`Get all todos`, { userId, count: todos.length });
+    logger.info(`Updating post`, { userId, postId: postId, updatedPost: updatedPost });
+
+    await updatePost(userId, postId, updatedPost);
+
+    logger.info(`Updated post`, { userId, postId: postId, updatedPost: updatedPost });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        items: todos
-      })
+      body: null
     };
   }
 );

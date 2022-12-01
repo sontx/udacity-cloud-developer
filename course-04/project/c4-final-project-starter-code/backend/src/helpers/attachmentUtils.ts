@@ -4,7 +4,7 @@ import { createLogger } from '../utils/logger';
 
 const XAWS = AWSXRay.captureAWS(AWS);
 
-const logger = createLogger('TodosAccess');
+const logger = createLogger('AttachmentUtils');
 
 export class AttachmentUtils {
   constructor(

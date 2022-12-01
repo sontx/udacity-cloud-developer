@@ -2,26 +2,26 @@ import * as AWS from 'aws-sdk';
 import * as AWSXRay from 'aws-xray-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { createLogger } from '../utils/logger';
-import { TodoItem } from '../models/TodoItem';
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest';
+import {PostItem} from "../models/PostItem";
+import {UpdatePostRequest} from "../requests/UpdatePostRequest";
 
 const XAWS = AWSXRay.captureAWS(AWS);
 
-const logger = createLogger('TodosAccess');
+const logger = createLogger('PostsAccess');
 
-export class TodosAccess {
+export class PostsAccess {
   constructor(
     private readonly docClient: DocumentClient = new (
       XAWS.DynamoDB as any
     ).DocumentClient(),
-    private readonly todosTable = process.env.TODOS_TABLE
+    private readonly postsTable = process.env.POSTS_TABLE
   ) {}
 
-  async getAllTodos(userId: string): Promise<TodoItem[]> {
-    logger.info('Get all todos', { userId });
+  async getAllPosts(userId: string): Promise<PostItem[]> {
+    logger.info('Get all posts', { userId });
     const result = await this.docClient
       .query({
-        TableName: this.todosTable,
+        TableName: this.postsTable,
         KeyConditionExpression: 'userId = :userId',
         ExpressionAttributeValues: {
           ':userId': userId
@@ -30,54 +30,52 @@ export class TodosAccess {
       })
       .promise();
 
-    return result.Items as TodoItem[];
+    return result.Items as PostItem[];
   }
 
-  async createTodo(todo: TodoItem): Promise<TodoItem> {
+  async createPost(post: PostItem): Promise<PostItem> {
     await this.docClient
       .put({
-        TableName: this.todosTable,
-        Item: todo
+        TableName: this.postsTable,
+        Item: post
       })
       .promise();
 
-    return todo;
+    return post;
   }
 
-  async updateTodo(todoId: string, userId: string, todo: UpdateTodoRequest) {
+  async updatePost(postId: string, userId: string, post: UpdatePostRequest) {
     await this.docClient
       .update({
-        TableName: this.todosTable,
+        TableName: this.postsTable,
         Key: {
-          todoId: todoId,
+          postId: postId,
           userId: userId
         },
         UpdateExpression:
-          'set #workaroundName = :name, #dueDate = :dueDate, #done = :done',
+          'set #title = :title, #content = :content',
         ExpressionAttributeValues: {
-          ':name': todo.name,
-          ':dueDate': todo.dueDate,
-          ':done': todo.done
+          ':title': post.title,
+          ':content': post.content,
         },
         ExpressionAttributeNames: {
-          '#workaroundName': 'name',
-          '#dueDate': 'dueDate',
-          '#done': 'done'
+          "#title": "title",
+          "#content": "content"
         }
       })
       .promise();
   }
 
-  async updateTodoAttachment(
-    todoId: string,
+  async updatePostAttachment(
+    postId: string,
     userId: string,
     attachmentUrl: string
   ) {
     await this.docClient
       .update({
-        TableName: this.todosTable,
+        TableName: this.postsTable,
         Key: {
-          todoId: todoId,
+          postId: postId,
           userId: userId
         },
         UpdateExpression: 'set attachmentUrl = :attachmentUrl',
@@ -88,17 +86,17 @@ export class TodosAccess {
       .promise();
   }
 
-  async todoExists(userId: string, todoId: string) {
-    return !!this.getTodo(userId, todoId);
+  async postExists(userId: string, postId: string) {
+    return !!this.getPost(userId, postId);
   }
 
-  async getTodo(userId: string, todoId: string) {
+  async getPost(userId: string, postId: string) {
     const result = await this.docClient
       .query({
-        TableName: this.todosTable,
-        KeyConditionExpression: 'todoId = :todoId AND userId = :userId',
+        TableName: this.postsTable,
+        KeyConditionExpression: 'postId = :postId AND userId = :userId',
         ExpressionAttributeValues: {
-          ':todoId': todoId,
+          ':postId': postId,
           ':userId': userId
         }
       })
@@ -107,12 +105,12 @@ export class TodosAccess {
     return result.Count > 0 ? result.Items[0] : null;
   }
 
-  async deleteTodo(todoId: string, userId: string) {
+  async deletePost(postId: string, userId: string) {
     await this.docClient
       .delete({
-        TableName: this.todosTable,
+        TableName: this.postsTable,
         Key: {
-          todoId: todoId,
+          postId: postId,
           userId: userId
         }
       })
