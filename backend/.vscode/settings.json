@@ -1,0 +1,11 @@
+{
+  "cSpell.words": [
+    "Todos"
+  ],
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/lalcebo/json-schema/master/serverless/reference.json": [
+      "file:///f%3A/learning/udacity-cloud-developer/course-04/project/c4-final-project-starter-code/backend/serverless.yml"
+    ],
+    "https://raw.githubusercontent.com/awslabs/goformation/master/schema/sam.schema.json": "file:///f%3A/learning/udacity-cloud-developer/course-04/project/c4-final-project-starter-code/backend/serverless.test.yml"
+  }
+}
