@@ -1,0 +1,4 @@
+- name: get all posts
+  endpoint:
+    function: GetPosts
+  response:

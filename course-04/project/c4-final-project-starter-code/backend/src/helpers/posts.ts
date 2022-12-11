@@ -1,10 +1,10 @@
 import { AttachmentUtils } from './attachmentUtils';
 import * as uuid from 'uuid';
 import * as createError from 'http-errors';
-import {PostItem} from "../models/PostItem";
-import {CreatePostRequest} from "../requests/CreatePostRequest";
-import {PostsAccess} from "./postsAccess";
-import {UpdatePostRequest} from "../requests/UpdatePostRequest";
+import { PostItem } from '../models/PostItem';
+import { CreatePostRequest } from '../requests/CreatePostRequest';
+import { PostsAccess } from './postsAccess';
+import { UpdatePostRequest } from '../requests/UpdatePostRequest';
 
 const postsAccess = new PostsAccess();
 const attachmentUtils = new AttachmentUtils();
@@ -32,23 +32,23 @@ export async function updatePost(
   post: UpdatePostRequest
 ) {
   if (!(await postsAccess.postExists(userId, postId))) {
-    throw createError(404, 'Post does not exist');
+    throw new createError.NotFound('Post does not exist');
   }
 
   await postsAccess.updatePost(postId, userId, post);
 }
 
 export async function getPost(userId: string, postId: string) {
-  const post = await postsAccess.getPost(userId, postId)
+  const post = await postsAccess.getPost(userId, postId);
   if (!post) {
-    throw createError(404, 'Post does not exist');
+    throw new createError.NotFound('Post does not exist');
   }
   return post;
 }
 
 export async function deletePost(userId: string, postId: string) {
   if (!(await postsAccess.postExists(userId, postId))) {
-    throw createError(404, 'Post does not exist');
+    throw new createError.NotFound('Post does not exist');
   }
 
   await postsAccess.deletePost(postId, userId);
@@ -60,7 +60,7 @@ export async function getUploadUrl(
   imageId: string
 ) {
   if (!(await postsAccess.postExists(userId, postId))) {
-    throw createError(404, 'Post does not exist');
+    throw new createError.NotFound('Post does not exist');
   }
 
   const uploadUrl = attachmentUtils.getUploadUrl(imageId);
