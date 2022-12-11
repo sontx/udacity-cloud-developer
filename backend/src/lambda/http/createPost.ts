@@ -4,8 +4,8 @@ import middy from 'middy';
 import { cors, httpErrorHandler } from 'middy/middlewares';
 import { getUserId } from '../utils';
 import { createLogger } from '../../utils/logger';
-import {CreatePostRequest} from "../../requests/CreatePostRequest";
-import {createPost} from "../../helpers/posts";
+import { CreatePostRequest } from '../../requests/CreatePostRequest';
+import { createPost } from '../../businessLogic/posts';
 
 const logger = createLogger('createPost');
 

@@ -6,7 +6,7 @@ import { cors, httpErrorHandler } from 'middy/middlewares';
 import * as uuid from 'uuid';
 import { getUserId } from '../utils';
 import { createLogger } from '../../utils/logger';
-import {getUploadUrl} from "../../helpers/posts";
+import { getUploadUrl } from '../../businessLogic/posts';
 
 const logger = createLogger('generateUploadUrl');
 

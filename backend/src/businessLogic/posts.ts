@@ -1,9 +1,9 @@
-import { AttachmentUtils } from './attachmentUtils';
+import { AttachmentUtils } from '../dataLayer/attachmentUtils';
 import * as uuid from 'uuid';
 import * as createError from 'http-errors';
 import { PostItem } from '../models/PostItem';
 import { CreatePostRequest } from '../requests/CreatePostRequest';
-import { PostsAccess } from './postsAccess';
+import { PostsAccess } from '../dataLayer/postsAccess';
 import { UpdatePostRequest } from '../requests/UpdatePostRequest';
 
 const postsAccess = new PostsAccess();

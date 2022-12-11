@@ -6,8 +6,8 @@ import { cors, httpErrorHandler } from 'middy/middlewares';
 
 import { getUserId } from '../utils';
 import { createLogger } from '../../utils/logger';
-import {UpdatePostRequest} from "../../requests/UpdatePostRequest";
-import {updatePost} from "../../helpers/posts";
+import { UpdatePostRequest } from '../../requests/UpdatePostRequest';
+import { updatePost } from '../../businessLogic/posts';
 
 const logger = createLogger('updatePost');
 
@@ -17,11 +17,19 @@ export const handler = middy(
     const updatedPost: UpdatePostRequest = JSON.parse(event.body);
     const userId = getUserId(event);
 
-    logger.info(`Updating post`, { userId, postId: postId, updatedPost: updatedPost });
+    logger.info(`Updating post`, {
+      userId,
+      postId: postId,
+      updatedPost: updatedPost
+    });
 
     await updatePost(userId, postId, updatedPost);
 
-    logger.info(`Updated post`, { userId, postId: postId, updatedPost: updatedPost });
+    logger.info(`Updated post`, {
+      userId,
+      postId: postId,
+      updatedPost: updatedPost
+    });
 
     return {
       statusCode: 200,

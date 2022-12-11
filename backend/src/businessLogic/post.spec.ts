@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
-import { PostsAccess } from './postsAccess';
-import { AttachmentUtils } from './attachmentUtils';
+import { PostsAccess } from '../dataLayer/postsAccess';
+import { AttachmentUtils } from '../dataLayer/attachmentUtils';
 import {
   createPost,
   deletePost,

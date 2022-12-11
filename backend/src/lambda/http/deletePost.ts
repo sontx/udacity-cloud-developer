@@ -6,7 +6,7 @@ import { cors, httpErrorHandler } from 'middy/middlewares';
 
 import { getUserId } from '../utils';
 import { createLogger } from '../../utils/logger';
-import {deletePost} from "../../helpers/posts";
+import { deletePost } from '../../businessLogic/posts';
 
 const logger = createLogger('deletePost');
 
